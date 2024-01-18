@@ -5,6 +5,12 @@ import './App.css';
 
 function Model(props) {
   const group = useRef()
+  useFrame(() => {
+    // This will continuously rotate the model
+    if (group.current) {
+      group.current.rotation.y += 0.01;
+    }
+  });
   const { nodes, materials } = useGLTF('/voyager.glb')
   return (
     // <group {...props} dispose={null} scale={1}>
@@ -24,6 +30,39 @@ function Model(props) {
   )
 }
 
+
+function Moon(props) {
+  const moonRef = useRef()
+  useFrame(() => {
+    // This will continuously rotate the model
+    if (moonRef.current) {
+      moonRef.current.rotation.y += 0.008;
+    }
+  });
+  const { nodes, materials } = useGLTF('/our_moon.glb')
+  return (
+    <group {...props} dispose={null} ref={moonRef}>
+      <group rotation={[-Math.PI / 2, 0, 0]}>
+        <group rotation={[Math.PI / 2, 0, 0]} scale={0.01}>
+          <group rotation={[-Math.PI / 2, 0, 0]} scale={100}>
+            <mesh geometry={nodes.lroc_color_poles_16k_lroc_color_poles_16k_0.geometry} material={materials.lroc_color_poles_16k} />
+            <mesh geometry={nodes.lroc_color_poles_16k_lroc_color_poles_16k_0_1.geometry} material={materials.lroc_color_poles_16k} />
+            <mesh geometry={nodes.lroc_color_poles_16k_lroc_color_poles_16k_0_2.geometry} material={materials.lroc_color_poles_16k} />
+            <mesh geometry={nodes.lroc_color_poles_16k_lroc_color_poles_16k_0_3.geometry} material={materials.lroc_color_poles_16k} />
+            <mesh geometry={nodes.lroc_color_poles_16k_lroc_color_poles_16k_0_4.geometry} material={materials.lroc_color_poles_16k} />
+            <mesh geometry={nodes.lroc_color_poles_16k_lroc_color_poles_16k_0_5.geometry} material={materials.lroc_color_poles_16k} />
+            <mesh geometry={nodes.lroc_color_poles_16k_lroc_color_poles_16k_0_6.geometry} material={materials.lroc_color_poles_16k} />
+            <mesh geometry={nodes.lroc_color_poles_16k_lroc_color_poles_16k_0_7.geometry} material={materials.lroc_color_poles_16k} />
+            <mesh geometry={nodes.lroc_color_poles_16k_lroc_color_poles_16k_0_8.geometry} material={materials.lroc_color_poles_16k} />
+            <mesh geometry={nodes.lroc_color_poles_16k_lroc_color_poles_16k_0_9.geometry} material={materials.lroc_color_poles_16k} />
+            <mesh geometry={nodes.lroc_color_poles_16k_lroc_color_poles_16k_0_10.geometry} material={materials.lroc_color_poles_16k} />
+          </group>
+        </group>
+      </group>
+    </group>
+  )
+}
+
 function App() {
   return (
 <div className="wrapper"
@@ -39,8 +78,9 @@ function App() {
         <Suspense fallback={null}>
           <ambientLight intensity={0.5} />
           <directionalLight intensity={1} position={[0, 10, 10]} />
-          <Model />
-          <OrbitControls enablePan={true} enableZoom={true} enableRotate={true} />
+          <Model position={[0,5,0]} />
+          <Moon camera={{ fov: 70, position: [0, 0, 15] }} position={[0,-8,0]}/>
+          <OrbitControls enablePan={true} enableZoom={true} enableRotate={true} enableDamping={true} />
           <Stars /> {/* HDRI Lighting */}
         </Suspense>
       </Canvas>
